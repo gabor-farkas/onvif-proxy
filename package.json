@@ -1,0 +1,8 @@
+{
+    "name": "xxx",
+    "version": "0.0.1",
+    "dependencies": {
+        "express": "^4.18.2",
+        "onvif": "^0.6.8"
+    }
+}
