@@ -31,10 +31,11 @@ function videoSaver(desc) {
 		}
 		videorunning = true;
 		const start = new Date();
-		const name = Math.floor(start.getTime() / 1000);
-		videos.push({ name, start });
+		const timestamp = Math.floor(start.getTime() / 1000);
+		const fileName = '../recordings/' + timestamp + '-' + desc.filePostfix + '.mp4'
+		videos.push({ name: fileName, start });
 		console.log('Starting recording ' + start);
-		await execFile("ffmpeg", ['-i', desc.rtspAddress, '-c:a', 'aac', '-vcodec', 'copy', '-t', '15', '../recordings/' + name + '-' + desc.filePostfix + '.mp4']);
+		await execFile("ffmpeg", ['-i', desc.rtspAddress, '-c:a', 'aac', '-vcodec', 'copy', '-t', '15', fileName]);
 		videorunning = false;
 		console.log('Recording finished ' + start);
 		setTimeout(startVideoSaving, 0);
@@ -46,7 +47,7 @@ function videoSaver(desc) {
 				if (keepUntil && (v.start.getTime() < keepUntil )) { 
 					console.log('Preserving video ' +  v.name);
 				} else {
-					fs.unlink('../recordings/' + v.name + '.mp4', () => {
+					fs.unlink(v.name, () => {
 					console.log('Deleted old video ' + v.name) });
 				}
 			} else keep.push(v);
