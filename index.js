@@ -53,7 +53,7 @@ function videoSaver(desc) {
 						console.log('Done');
 					});
 				} else {
-					fs.unlink(v.name, () => {
+					fs.unlink(v.tmpPath, () => {
 						console.log('Deleted old video ' + v.name)
 					});
 				}
