@@ -37,7 +37,8 @@ function videoSaver(desc) {
 		const finalPath = '../recordings/' + fileName;
 		videos.push({ name: fileName, start, tmpPath, finalPath });
 		console.log('Starting recording ' + start);
-		await execFile("ffmpeg", ['-i', desc.rtspAddress, '-c:a', 'aac', '-vcodec', 'copy', '-t', '15', tmpPath]);
+		await execFile("ffmpeg", ['-i', desc.rtspAddress, '-c:a', 'aac', '-vcodec', 'copy', '-t', '15', tmpPath])
+			.catch(e => console.log('Error during video streaming start', e));
 		videorunning = false;
 		console.log('Recording finished ' + start);
 		setTimeout(startVideoSaving, 0);
