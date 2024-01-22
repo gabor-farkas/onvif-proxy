@@ -32,10 +32,12 @@ function videoSaver(desc) {
 		videorunning = true;
 		const start = new Date();
 		const timestamp = Math.floor(start.getTime() / 1000);
-		const fileName = '../recordings/' + timestamp + '-' + desc.filePostfix + '.mp4'
-		videos.push({ name: fileName, start });
+		const fileName = timestamp + '-' + desc.filePostfix + '.mp4';
+		const tmpPath = '/mnt/ramdisk' + fileName; // in fstab: "tmpfs /mnt/ramdisk tmpfs nodev,nosuid,size=10M 0 0"
+		const finalPath = '../recordings/' + fileName;
+		videos.push({ name: fileName, start, tmpPath, finalPath });
 		console.log('Starting recording ' + start);
-		await execFile("ffmpeg", ['-i', desc.rtspAddress, '-c:a', 'aac', '-vcodec', 'copy', '-t', '15', fileName]);
+		await execFile("ffmpeg", ['-i', desc.rtspAddress, '-c:a', 'aac', '-vcodec', 'copy', '-t', '15', tmpPath]);
 		videorunning = false;
 		console.log('Recording finished ' + start);
 		setTimeout(startVideoSaving, 0);
@@ -46,9 +48,13 @@ function videoSaver(desc) {
 			if (now - v.start.getTime() > 30 * 1000) {
 				if (keepUntil && (v.start.getTime() < keepUntil )) { 
 					console.log('Preserving video ' +  v.name);
+					fs.rename(v.tmpPath, v.finalPath, () => {
+						console.log('Done');
+					});
 				} else {
 					fs.unlink(v.name, () => {
-					console.log('Deleted old video ' + v.name) });
+						console.log('Deleted old video ' + v.name)
+					});
 				}
 			} else keep.push(v);
 		});
