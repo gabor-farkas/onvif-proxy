@@ -33,7 +33,7 @@ function videoSaver(desc) {
 		const start = new Date();
 		const timestamp = Math.floor(start.getTime() / 1000);
 		const fileName = timestamp + '-' + desc.filePostfix + '.mp4';
-		const tmpPath = '/mnt/ramdisk' + fileName; // in fstab: "tmpfs /mnt/ramdisk tmpfs nodev,nosuid,size=10M 0 0"
+		const tmpPath = '/mnt/ramdisk/' + fileName; // in fstab: "tmpfs /mnt/ramdisk tmpfs nodev,nosuid,size=10M 0 0"
 		const finalPath = '../recordings/' + fileName;
 		videos.push({ name: fileName, start, tmpPath, finalPath });
 		console.log('Starting recording ' + start);
